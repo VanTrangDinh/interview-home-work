@@ -1,4 +1,6 @@
 const express = require('express');
+const commentRoute = require('./comment.route');
+const postRoute = require('./post.route');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
@@ -14,6 +16,14 @@ const defaultRoutes = [
   {
     path: '/users',
     route: userRoute,
+  },
+  {
+    path: '/posts',
+    route: postRoute,
+  },
+  {
+    path: '/comments',
+    route: commentRoute,
   },
 ];
 
