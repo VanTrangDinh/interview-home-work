@@ -12,12 +12,14 @@ const router = express.Router();
 router
   .route('/')
   .post(auth(), validate(postValidation.createPost), asyncHandler(postController.createPost))
-  .get(/* auth(),  */ validate(postValidation.getPosts), asyncHandler(postController.getPosts));
+  .get(validate(postValidation.getPosts), asyncHandler(postController.getPosts));
 
-router
-  .route('/:postId')
-  .get(validate(postValidation.getPost), asyncHandler(postController.getPostById))
-  .patch(auth(), validate(postValidation.updatePost), asyncHandler(postController.updatePost))
-  .delete(auth(), validate(postValidation.deletePost), asyncHandler(postController.deletePost));
+router.route('/search').get(validate(postValidation.searchPost), asyncHandler(postController.searchPost));
+
+// router
+//   .route('/:postId')
+//   .get(validate(postValidation.getPost), asyncHandler(postController.getPostById))
+//   .patch(auth(), validate(postValidation.updatePost), asyncHandler(postController.updatePost))
+//   .delete(auth(), validate(postValidation.deletePost), asyncHandler(postController.deletePost));
 
 module.exports = router;

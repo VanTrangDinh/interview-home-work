@@ -1,9 +1,15 @@
 'use strict';
 
-const { createPost, getPosts, getPostById, updatePost, deletePost } = require('../services/post.service');
+const { createPost, getPosts, getPostById, updatePost, deletePost, searchPostByKeys } = require('../services/post.service');
 const { SuccessResponse } = require('../core/success.response');
 
 class PostController {
+  searchPost = async (req, res, next) => {
+    new SuccessResponse({
+      message: 'Search post successfully',
+      metadata: await searchPostByKeys(req.body),
+    }).send(res);
+  };
   createPost = async (req, res, next) => {
     new SuccessResponse({
       message: 'A new post was successfully created.',

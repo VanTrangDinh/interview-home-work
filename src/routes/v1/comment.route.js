@@ -7,20 +7,11 @@ const { commentValidation } = require('../../validations');
 
 const router = express.Router();
 
-router.route('/').post(auth(), validate(commentValidation.creatComment), asyncHandler(commentController.creatComment));
-//   .get(/* auth(),  */ validate(postValidation.getPosts), asyncHandler(postController.getPosts));
+router
+  .route('/')
+  .post(auth(), validate(commentValidation.createComment), asyncHandler(commentController.creatComment))
+  .get(auth(), validate(commentValidation.getCommentsByParentId), asyncHandler(commentController.getCommentByParentId))
 
-// router
-//   .route('/:postId')
-//   .get(validate(postValidation.getPost), asyncHandler(postController.getPostById))
-//   .patch(auth(), validate(postValidation.updatePost), asyncHandler(postController.updatePost))
-//   .delete(auth(), validate(postValidation.deletePost), asyncHandler(postController.deletePost));
+  .delete(auth(), validate(commentValidation.deleteComment), asyncHandler(commentController.deleteComment));
 
 module.exports = router;
-
-/* 
-
-router.post('/', auth(), asyncHandler(commentController.creatComment));
-router.get('/', asyncHandler(commentController.getCommentByParentId));
-
-*/

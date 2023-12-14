@@ -41,4 +41,7 @@ const postSchema = new Schema(
   }
 );
 
+//create index for search
+postSchema.index({ content: 'text', title: 'text' });
+
 module.exports = model(DOCUMENT_NAME, postSchema);

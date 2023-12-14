@@ -2,9 +2,24 @@
 
 const { NotFoundError, AuthFailureError } = require('../core/error.response');
 const Post = require('../models/post.model');
-const { converToObjectInMongodb } = require('../utils/index');
 
 class PostService {
+  static async searchPostByKeys({ keySearch }) {
+    const regexSearch = new RegExp(keySearch);
+
+    const results = await Post.find(
+      {
+        $text: { $search: regexSearch },
+      },
+      { score: { $meta: 'textScore' } }
+    )
+      .sort({ score: { $meta: 'textScore' } })
+      .lean();
+
+    console.log({ results });
+    return results;
+  }
+
   static async createPost({ title, content }, userId) {
     const post = new Post({
       title,

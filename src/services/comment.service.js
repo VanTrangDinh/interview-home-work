@@ -2,17 +2,16 @@
 
 const { NotFoundError } = require('../core/error.response');
 const Comment = require('../models/comment.model');
+const Post = require('../models/post.model');
 const { converToObjectInMongodb } = require('../utils/index');
-
-/**
- * key features: Comment service
- * add comment [user || shop]
- * get list of comments [user || shop]
- * delete comment [user || shop || admin]
- */
 
 class CommentService {
   static async creatComment({ postId, content, parentCommentId = null }, userId) {
+    //check post already exists
+    const foundPost = await Post.findById(postId);
+
+    if (!foundPost) throw new NotFoundError('Post not found');
+
     const comment = new Comment({
       comment_postId: postId,
       comment_userId: userId,
@@ -79,6 +78,7 @@ class CommentService {
   static async getCommentByParentId({ postId, parentCommentId = null, limit = 50, offset = 0 }) {
     if (parentCommentId) {
       const parent = await Comment.findById(parentCommentId);
+
       if (!parent) throw new NotFoundError(`Comment ${parentCommentId} not found`);
 
       const comments = await Comment.find({
@@ -99,6 +99,52 @@ class CommentService {
       .sort({ comment_left: 1 });
 
     return comments;
+  }
+
+  static async deleteComment({ commentId, postId }) {
+    //check post already exists
+    const foundPost = await Post.findById(postId);
+
+    if (!foundPost) throw new NotFoundError('Post not found');
+
+    //comment_left, comment_right ?
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) throw new NotFoundError('Comment not found');
+
+    const leftValue = comment.comment_left;
+    const rightValue = comment.comment_right;
+
+    const width = rightValue - leftValue + 1;
+
+    //delete all children of comment
+    await Comment.deleteMany({
+      comment_postId: converToObjectInMongodb(postId),
+      comment_left: { $gte: leftValue, $lte: rightValue },
+    });
+
+    //update comment_left value and comment_right value
+    await Comment.updateMany(
+      {
+        comment_postId: converToObjectInMongodb(postId),
+        comment_right: { $gt: rightValue },
+      },
+      {
+        $inc: { comment_right: -width },
+      }
+    );
+
+    await Comment.updateMany(
+      {
+        comment_postId: converToObjectInMongodb(postId),
+        comment_right: { $gt: rightValue },
+      },
+      {
+        $inc: { comment_left: -width },
+      }
+    );
+
+    return true;
   }
 }
 

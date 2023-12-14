@@ -42,10 +42,19 @@ const deletePost = {
   }),
 };
 
+const searchPost = {
+  body: Joi.object().keys({
+    keySearch: Joi.string().required(),
+    // limit: Joi.number().integer(),
+    // offset: Joi.number().integer(),
+  }),
+};
+
 module.exports = {
   createPost,
   getPosts,
   getPost,
   updatePost,
   deletePost,
+  searchPost,
 };

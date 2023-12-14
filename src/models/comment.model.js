@@ -9,7 +9,7 @@ const commnentSchema = new Schema(
   {
     comment_postId: {
       type: Schema.Types.ObjectId,
-      ref: 'Product',
+      ref: 'Post',
     },
     comment_userId: {
       type: Schema.Types.ObjectId,
