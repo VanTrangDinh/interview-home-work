@@ -25,9 +25,9 @@ router
 
 router
   .route('/posts/:id/comments')
-  .get(validate(externalApiValidation.getCommentsByPostId), asyncHandler(externalApiController.getCommentsByPostId));
+  .get(validate(externalApiValidation.getCommentsByPostId), asyncHandler(externalApiController.getPostComments));
 
 router
   .route('/comments')
-  .get(validate(externalApiValidation.getCommentsByQuery), asyncHandler(externalApiController.getPostComments));
+  .get(validate(externalApiValidation.getCommentsByQuery), asyncHandler(externalApiController.getCommentsByPostId));
 module.exports = router;

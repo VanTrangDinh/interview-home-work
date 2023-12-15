@@ -51,7 +51,7 @@ const getCommentsByPostId = {
 
 const getCommentsByQuery = {
   query: Joi.object().keys({
-    postId: Joi.string().required() /* .custom(objectId), */,
+    id: Joi.string().required() /* .custom(objectId), */,
   }),
 };
 

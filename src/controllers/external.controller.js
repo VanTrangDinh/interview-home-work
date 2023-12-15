@@ -22,14 +22,16 @@ class ExternalApiController {
 
   getPostComments = async (req, res) => {
     const postId = req.params.id;
+    const { page = 1, limit = 10 } = req.query;
+    console.log({ postId });
     new SuccessResponse({
       message: 'Get post comments successfully',
-      metadata: await externalService.get(`posts/${postId}/comments`),
+      metadata: await externalService.get(`posts/${postId}/comments`, { _page: page, _limit: limit }),
     }).send(res);
   };
 
   getCommentsByPostId = async (req, res) => {
-    const postId = req.query.postId;
+    const postId = req.query.id;
     new SuccessResponse({
       message: 'Get comments by post ID successfully',
       metadata: await externalService.get('comments', { postId }),
